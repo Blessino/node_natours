@@ -37,7 +37,7 @@ const sendErrorProd = (err, res) => {
       message: err.message,
     });
 
-    //Programming or other unknown oerror: dont't leak error details
+    //Programming or other unknown error: dont't leak error details
   } else {
     //Log error
     console.error('Error', err);
@@ -57,17 +57,17 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    sendErrorDev(err, res);
-    // let error = { ...err };
+    let error = { ...err };
 
-    // if (error.name === 'CastError') error = handleCastErrorDB(error);
-    // if (error.code === 11000) error = handleDuplicateFieldsDB(error);
-    // if (error.name === 'ValidationError')
-    //   error = handleValidationErrorDB(error);
-    // sendErrorProd(error, res);
-    // console.log('isOperational:', err.isOperational);
-    // console.log('Error name:', err.name);
-    // console.log('Error code:', err.code);
-    // console.log('Error message:', err.message);
+    if (error.name === 'CastError') error = handleCastErrorDB(error);
+    if (error.code === 11000) error = handleDuplicateFieldsDB(error);
+    if (error.name === 'ValidationError')
+      error = handleValidationErrorDB(error);
+
+    sendErrorProd(error, res);
+    console.log('isOperational:', err.isOperational);
+    console.log('Error name:', err.name);
+    console.log('Error code:', err.code);
+    console.log('Error message:', err.message);
   }
 };
