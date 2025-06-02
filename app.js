@@ -24,9 +24,9 @@ app.use(express.static(`${__dirname}/public`));
 // });
 console.log('ENV:', process.env.NODE_ENV);
 
-
-app.use((res, req, next) => {
+app.use((req, res, next) => {
   req.requestTIme = new Date().toISOString();
+  // console.log(req.headers);
   next();
 });
 
